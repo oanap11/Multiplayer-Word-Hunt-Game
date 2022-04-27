@@ -76,6 +76,12 @@ public class WordHunt extends JFrame implements Runnable {
 						packet.add(name);
 						out.println(packet);
 						break;
+					case ActionCode.REJECTED :
+						JOptionPane.showMessageDialog(this, name + " was not invited to the game / the name is already used");
+						logIn();
+						packet = new Packet(ActionCode.NAME);
+						packet.add(name);
+						out.println(packet);
 					}
 				}
 			}
