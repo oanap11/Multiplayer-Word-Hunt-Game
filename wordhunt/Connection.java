@@ -40,8 +40,8 @@ public class Connection implements Runnable {
 			sendToClient(packet);
 			
 			boolean validName = false;
-			
 			boolean keepRunning = true;
+			
 			while(keepRunning) {
 				String input = in.readLine();
 				server.log(input + " received from: " + name);
@@ -67,6 +67,9 @@ public class Connection implements Runnable {
 							packet = new Packet(ActionCode.REJECTED);
 							sendToClient(packet);
 						}
+						break;
+					case ActionCode.QUIT :
+						keepRunning = false;
 						break;
 					}
 				}
