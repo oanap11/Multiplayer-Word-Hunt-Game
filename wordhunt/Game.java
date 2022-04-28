@@ -56,4 +56,13 @@ public class Game {
 		
 		return playerId;
 	}
-}
+	
+	//sends a packet to all the opponents of a given player
+	public void sendToOpponents(int playerId, Packet packet) {
+		for(int i = 0; i < players.length; i++) {
+			if(i != playerId && players[i] != null) {
+				players[i].sendToClient(packet);
+			}
+		}
+	}
+}//class

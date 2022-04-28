@@ -100,6 +100,12 @@ public class Connection implements Runnable {
 	public void quit() {
 		server.log("Connection ended for " + name);
 		
+		if(!name.equals(DEFAULT_NAME)) {
+			Packet packet = new Packet(ActionCode.QUIT);
+			packet.add(name);
+			game.sendToOpponents(id, packet);
+		}
+		
 		try {
 			socket.close();
 		}

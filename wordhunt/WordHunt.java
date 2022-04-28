@@ -116,6 +116,13 @@ public class WordHunt extends JFrame implements Runnable {
 						}
 						openWindow();
 						break;
+					case ActionCode.PLAYERS :
+						for(int i = 0; i < parameters.size(); i++) {
+							String name = parameters.get(i);
+							scorePanels[i].setTitleLabel(name);
+						}
+						pack();
+						break;
 					}
 				}
 			}
