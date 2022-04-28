@@ -62,6 +62,9 @@ public class Connection implements Runnable {
 							int numberOfPlayers = game.getMaxNumberOfPlayers();
 							packet.add(numberOfPlayers);
 							sendToClient(packet);
+							
+							id = game.addPlayer(this);
+							server.log(name + " joined the game");
 						}
 						else {
 							packet = new Packet(ActionCode.REJECTED);
@@ -88,6 +91,10 @@ public class Connection implements Runnable {
 		String packetString = packet.toString();
 		out.println(packetString);
 		server.log("Sent to " + name + ": " + packetString);
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public void quit() {
