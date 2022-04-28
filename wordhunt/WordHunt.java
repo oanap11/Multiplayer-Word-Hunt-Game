@@ -146,6 +146,9 @@ public class WordHunt extends JFrame implements Runnable {
 						break;
 					case ActionCode.NEW_BOARD :
 						gamePanel.setLetterTiles(parameters.get(0));
+						messageLabel.setText("Start!");
+						messageLabel.setBackground(Color.WHITE);
+						gamePanel.allowInput(true);
 						break;
 					}
 				}
