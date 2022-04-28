@@ -192,6 +192,12 @@ public class WordHuntServer extends JFrame implements Runnable {
 				log(e.getMessage());
 			}
 		}
+		
+		// stop an existing game
+		if(game != null) {
+			game.shutDown();
+			game = null;
+		}
 	}
 	
 	public void log(String message) {

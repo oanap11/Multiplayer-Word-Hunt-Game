@@ -2,6 +2,9 @@ package wordhunt;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
@@ -14,10 +17,14 @@ import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 
 
 public class WordHunt extends JFrame implements Runnable {
@@ -37,6 +44,11 @@ public class WordHunt extends JFrame implements Runnable {
 	private int numberOfPlayers = 0;
 	private JPanel scoresPanel = new JPanel();
 	private ScorePanel[] scorePanels;
+	
+	private JLabel messageLabel = new JLabel("Waiting for players");
+	
+	private GamePanel gamePanel = new GamePanel(this);
+	private JTextArea wordListArea = new JTextArea();
 	
 	public WordHunt() {
 		logIn();
@@ -123,6 +135,18 @@ public class WordHunt extends JFrame implements Runnable {
 						}
 						pack();
 						break;
+					case ActionCode.QUIT :
+						String message = parameters.get(0) + " left the game";
+						JOptionPane.showMessageDialog(this, message);
+						close();
+						break;
+					case ActionCode.SHUT_DOWN :
+						JOptionPane.showMessageDialog(this, "The server was shutdown");
+						close();
+						break;
+					case ActionCode.NEW_BOARD :
+						gamePanel.setLetterTiles(parameters.get(0));
+						break;
 					}
 				}
 			}
@@ -144,7 +168,7 @@ public class WordHunt extends JFrame implements Runnable {
 		initGUI();
 		
 		setTitle(name);
-		setResizable(false);
+		//setResizable(false);
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -163,15 +187,51 @@ public class WordHunt extends JFrame implements Runnable {
 		});
 		
 		//main panel
-				JPanel mainPanel = new JPanel();
-				mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-				mainPanel.setBackground(Color.MAGENTA);
-				add(mainPanel, BorderLayout.CENTER);
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		mainPanel.setBackground(Color.MAGENTA);
+		add(mainPanel, BorderLayout.CENTER);
 				
-				//scores panel
-				scoresPanel.setLayout(new BoxLayout(scoresPanel, BoxLayout.X_AXIS));
-				scoresPanel.setBackground(Color.MAGENTA);
-				mainPanel.add(scoresPanel);
+		//scores panel
+		//scoresPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, scoresPanel.getPreferredSize().height));
+		scoresPanel.setLayout(new BoxLayout(scoresPanel, BoxLayout.X_AXIS));
+		scoresPanel.setBackground(Color.MAGENTA);
+		mainPanel.add(scoresPanel);
+		
+		//message
+		messageLabel.setAlignmentX(CENTER_ALIGNMENT);
+		messageLabel.setAlignmentY(CENTER_ALIGNMENT);
+		messageLabel.setOpaque(true);
+		messageLabel.setBackground(Color.WHITE);
+		EmptyBorder messageBorder = new EmptyBorder(5, 10, 5, 10);
+		messageLabel.setBorder(messageBorder);
+		mainPanel.add(messageLabel);
+		
+		//horizontal panel
+		JPanel horizontalPanel = new JPanel();
+		horizontalPanel.setBackground(Color.BLUE);
+		horizontalPanel.setLayout(new BoxLayout(horizontalPanel, BoxLayout.X_AXIS));
+		EmptyBorder gameBorder = new EmptyBorder(10, 10, 10, 10);
+		horizontalPanel.setBorder(gameBorder);
+		mainPanel.add(horizontalPanel);
+		
+		//game pnale
+		gamePanel.setPreferredSize(new Dimension(1000, 400));
+		//gamePanel.setPreferredSize(getPreferredSize());
+		horizontalPanel.add(gamePanel);
+		
+		//word list
+		Insets insets = new Insets(4, 10, 10, 4);
+		wordListArea.setMargin(insets);
+		wordListArea.setEditable(false);
+		Font font = new Font(Font.DIALOG, Font.BOLD, 12);
+		wordListArea.setFont(font);
+		JScrollPane scrollPane = new JScrollPane(wordListArea);
+		Dimension size = new Dimension(100, 0);
+		scrollPane.setPreferredSize(size);
+		horizontalPanel.add(scrollPane);
+		
+		
 	}
 
 	public static void main(String[] args) {
