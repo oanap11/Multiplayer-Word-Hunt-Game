@@ -2,8 +2,8 @@ package wordhunt;
 
 public class ActionCode {
 	
-	//server to client
-	 public static final String SUBMIT = "SUBMIT";
+	//server -> client
+	 public  static final String SUBMIT = "SUBMIT";
 	 public static final String ACCEPTED = "ACCEPTED";
 	 public static final String REJECTED = "REJECTED";
 	 public static final String PLAYERS = "PLAYERS";
@@ -15,16 +15,15 @@ public class ActionCode {
 	 public static final String NEW_BOARD = "NEW BOARD";
 	 public static final String TIMES_UP = "TIMES UP";
 	 public static final String POINTS = "POINTS";
-	 public static final String NEXT_ROUND = "NEXT ROUND";
 	 public static final String WINNER = "WINNER";
 	 public static final String SHUT_DOWN = "SHUT DOWN";
 	
-	//client to server
+	//client -> server
 	 public static final String NAME = "NAME";
 	 public static final String READY = "READY";
 	 public static final String WORD = "WORD";
 	
-	//client to server & server to client
+	//client -> server & server -> client
 	 public static final String QUIT = "QUIT";
 
 }

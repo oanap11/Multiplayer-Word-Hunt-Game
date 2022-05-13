@@ -9,7 +9,7 @@ import java.net.Socket;
 
 public class Connection implements Runnable {
 	
-	private static final String DEFAULT_NAME = "(New Client)";
+	private static final String DEFAULT_NAME = "(Client nou)";
 	
 	private WordHuntServer server;
 	private Socket socket;
@@ -44,7 +44,7 @@ public class Connection implements Runnable {
 			
 			while(keepRunning) {
 				String input = in.readLine();
-				server.log(input + " received from: " + name);
+				server.log(input + " trimis de: " + name);
 				if(input == null) {
 					keepRunning = false;
 				}
@@ -64,7 +64,7 @@ public class Connection implements Runnable {
 							sendToClient(packet);
 							
 							id = game.addPlayer(this);
-							server.log(name + " joined the game");
+							server.log(name + " a intrat in joc.");
 						}
 						else {
 							packet = new Packet(ActionCode.REJECTED);
@@ -74,12 +74,16 @@ public class Connection implements Runnable {
 					case ActionCode.QUIT :
 						keepRunning = false;
 						break;
+					default :
+						if(validName && input.length() > 0) {
+							game.processInput(id, input);
+						}
 					}
 				}
 			}
 		}
 		catch(IOException e) {
-			server.log("error when connecting to/communicating to the client");
+			server.log("Eroare la comunicarea cu clientul.");
 		}
 		finally {
 			quit();
@@ -90,7 +94,7 @@ public class Connection implements Runnable {
 	public void sendToClient(Packet packet) {
 		String packetString = packet.toString();
 		out.println(packetString);
-		server.log("Sent to " + name + ": " + packetString);
+		server.log("Trimis catre " + name + ": " + packetString);
 	}
 	
 	public String getName() {
@@ -98,7 +102,7 @@ public class Connection implements Runnable {
 	}
 	
 	public void quit() {
-		server.log("Connection ended for " + name);
+		server.log("Conexiune terminata pentru " + name);
 		
 		if(!name.equals(DEFAULT_NAME)) {
 			Packet packet = new Packet(ActionCode.QUIT);

@@ -21,8 +21,9 @@ public class Packet {
 		else {
 			actionCode = "";
 		}
-	} //constructor
+	} 
 	
+	//metode pentru adaugarea de variabile de tipuri diferite la lista de parametri
 	public void add(String s) {
 		parameters.add(s);
 	}
@@ -35,6 +36,7 @@ public class Packet {
 		parameters.add("" + b);
 	}
 	
+	//adauga mai multe String-uri in pachet in acelasi timp
 	public void add(ArrayList<String> strings) {
 		for(int i = 0; i < strings.size(); i++) {
 			String s = strings.get(i);
@@ -42,6 +44,7 @@ public class Packet {
 		}
 	}
 	
+	//toate pachetele trebuie convertite in String-uri inainte sa fie expediate
 	public String toString() {
 		String s = actionCode;
 		for(int i = 0; i < parameters.size(); i++) {
@@ -50,6 +53,7 @@ public class Packet {
 		return s;
 	}
 	
+	//getteri si setteri
 	public String getActionCode() {
 		return actionCode;
 	}
@@ -66,6 +70,7 @@ public class Packet {
 		return parameters.get(index);
 	}
 	
+	//metoda care verifica daca doua pachete sunt egale/au acelasi continut
 	public boolean equals(Packet packet) {
 		String thisPacketString = toString();
 		String comparePacketString = packet.toString();

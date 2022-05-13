@@ -38,10 +38,11 @@ import javax.swing.text.DefaultCaret;
 public class WordHuntServer extends JFrame implements Runnable {
 
 	private static final long serialVersionUID = 1L;
-	private static final String FILE_NAME = "PlayerNames.txt";
-	private static final int PORT_NUMBER = 51593;
+	private static int PORT = 51593;
 	
-	private JTextField namesField = new JTextField("Player 1, Player 2");
+	private String FILE_NAME = "PlayerNames.txt";
+	
+	private JTextField namesField = new JTextField("Jucator 1, Jucator 2");
 	private JTextArea logArea = new JTextArea(10, 30);
 	private JButton startStopButton = new JButton("Start");
 	
@@ -50,7 +51,6 @@ public class WordHuntServer extends JFrame implements Runnable {
 	private ServerSocket serverSocket;
 	private Game game;
 	
-	//constructor
 	public WordHuntServer() {
 		
 		initGUI();
@@ -61,6 +61,8 @@ public class WordHuntServer extends JFrame implements Runnable {
 		setVisible(true);
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		
+		//de fiecare data cand ferestra este deschisa,
+		//citeste numele din fisier si le afiseaza in namesField 
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(new File(FILE_NAME)));
 			String namesString = "";
@@ -75,10 +77,10 @@ public class WordHuntServer extends JFrame implements Runnable {
 			in.close();		
 		}
 		catch(FileNotFoundException e) {
-			JOptionPane.showMessageDialog(this, FILE_NAME + " was not found");
+			JOptionPane.showMessageDialog(this, "Fisierul " + FILE_NAME + " nu a fost gasit");
 		}
 		catch(IOException e) {
-			JOptionPane.showMessageDialog(this, FILE_NAME + " error when reading");
+			JOptionPane.showMessageDialog(this, "Eroare la citirea din fisierul " + FILE_NAME );
 		}
 		
 	}//constructor
@@ -87,7 +89,6 @@ public class WordHuntServer extends JFrame implements Runnable {
 		TitleLabel titleLabel = new TitleLabel("Word Hunt Server");
 		add(titleLabel, BorderLayout.PAGE_START);
 		
-		//listeners
 		addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent e) {
 				stopServer();
@@ -100,12 +101,12 @@ public class WordHuntServer extends JFrame implements Runnable {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		add(mainPanel, BorderLayout.CENTER);
 		
-		//option panel
+		//options panel
 		JPanel optionsPanel = new JPanel();
 		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.Y_AXIS));
 		mainPanel.add(optionsPanel);
 				
-		JLabel namesLabel = new JLabel("Invated player (separate names by commas): ");
+		JLabel namesLabel = new JLabel("Introduceti numele jucatorilor invitati (separate prin virgula): ");
 		optionsPanel.add(namesLabel);
 		namesField.addFocusListener(new FocusAdapter() {
 			public void focusGained(FocusEvent e) {
@@ -150,11 +151,13 @@ public class WordHuntServer extends JFrame implements Runnable {
 				listening = true;
 				
 				game = new Game(names);
-				log("A new game was created");
+				log("A fost creat un nou joc.");
 				
 				new Thread(this).start();
 				startStopButton.setText("Stop");
 				
+				//de fiecare data cand este apasat butonul de start, numele introduse 
+				//in namesField sunt salvate in fisierul PlayerNames.txt
 				try {
 					BufferedWriter out = new BufferedWriter(new FileWriter(new File(FILE_NAME)));
 					for(int i = 0; i< names.size(); i++) {
@@ -165,62 +168,64 @@ public class WordHuntServer extends JFrame implements Runnable {
 					out.close();
 				}
 				catch (IOException e) {
-					JOptionPane.showMessageDialog(this, FILE_NAME + " error when writin - could not save invited player's name");
+					JOptionPane.showMessageDialog(this, "Eroarea la scrierea in fisierul " + FILE_NAME);
 				}
 			}
 			else {
-				JOptionPane.showMessageDialog(this, "Must enter at least 1 name");
+				JOptionPane.showMessageDialog(this, "Introduceti cel putin un nume.");
 			}
 		}
 		else {
 			stopServer();
 		}
-	}
+	}//startServer()
 	
 	public void stopServer() {
 		listening = false;
 		startStopButton.setText("Start");
-		log("Server was stopped");
+		log("Serverul a fost oprit.");
 		
-		//stop listening for new clients
+		//nu mai asculta conexiuni
 		if(serverSocket != null && !serverSocket.isClosed()) {
 			try {
 				serverSocket.close();
 			}
 			catch (Exception e) {
-				log("Exception caught when trying to stop server connection");
+				log("Exceptie generata la oprirea serverului.");
 				log(e.getMessage());
 			}
 		}
 		
-		// stop an existing game
+		// opreste jocul
 		if(game != null) {
 			game.shutDown();
 			game = null;
 		}
-	}
+	}//stopServer
 	
+	//metoda pentru a afisa informatii in fereastra de server
 	public void log(String message) {
 		Date time = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss ");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss: ");
 		String timeStamp = dateFormat.format(time);
 		logArea.append(timeStamp + message + "\n");
 	}
 
 	@Override
 	public void run() {
-		log("The server is running");
+		log("Serverul a fost pornit.");
 		try {
-			serverSocket = new ServerSocket(PORT_NUMBER);
+			serverSocket = new ServerSocket(PORT);
 			
 			while(listening) {
 				Socket socket = serverSocket.accept();
 				new Connection(this, socket, game);
 			}
 		} catch (IOException e) {
-			//ignore expected IOException when stop button is clicked (listening is false)
+			//ignora eroarea de tip IOException generata la apasarea butonului de stop 
+			//(listening ia valoarea false)
 			if(listening) {
-				log("Exception caught when listening to port " + PORT_NUMBER);
+				log("Exceptie la ascultarea portului " + PORT);
 				log(e.getMessage());
 				stopServer();
 			}

@@ -26,6 +26,7 @@ public class LetterTile {
 		this.letter = letter;
 		this.fm = fm;
 		
+		//centreaza litera in celula
 		int left = col * SIZE;
 		int letterWidth = fm.stringWidth(letter);
 		int fromLeft = (SIZE - letterWidth) / 2;
@@ -49,7 +50,7 @@ public class LetterTile {
 	}
 	
 	public void unselect() {
-		selected = true;
+		selected = false;
 	}
 	
 	public boolean isSelected() {
@@ -64,6 +65,7 @@ public class LetterTile {
 		return centerY;
 	}
 	
+	//metoda determina daca un punct se afla in zona circulara a literei
 	public boolean inBounds(int locX, int locY) {
 		boolean in = false;
 		int distanceX = centerX - locX;

@@ -43,7 +43,7 @@ public class LogInDialog extends JDialog {
 	}
 	
 	public LogInDialog(String appName) {
-		setTitle("Log In to " + appName);
+		setTitle(appName);
 		
 		initGUI();
 		
@@ -61,7 +61,7 @@ public class LogInDialog extends JDialog {
 			in.close();
 		}catch (FileNotFoundException e) {}
 		catch (IOException e) {
-			JOptionPane.showMessageDialog(this, "Error when reading to " + FILE_NAME);
+			JOptionPane.showMessageDialog(this, "Eroare la citirea din fisierul " + FILE_NAME);
 		}
 	}
 	
@@ -71,10 +71,10 @@ public class LogInDialog extends JDialog {
 		String userName = userNameField.getText().trim();
 		
 		if(ipAddress.length() == 0) {
-			JOptionPane.showMessageDialog(this, "Ip address required");
+			JOptionPane.showMessageDialog(this, "Introduceti adresa ip.");
 		}
 		else if(userName.length() == 0)
-			JOptionPane.showMessageDialog(this, "User name required");
+			JOptionPane.showMessageDialog(this, "Introduceti numele de utilizator.");
 		else {
 			canceled = false;
 			setVisible(false);
@@ -86,7 +86,7 @@ public class LogInDialog extends JDialog {
 				out.write(userName);
 				out.close();
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(this, "Error when writing to " + FILE_NAME);
+				JOptionPane.showMessageDialog(this, "Eroare la scrierea in fisierul " + FILE_NAME);
 			}
 		}
 	}
@@ -102,11 +102,11 @@ public class LogInDialog extends JDialog {
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		add(mainPanel, BorderLayout.CENTER);
 		
-		JLabel ipAddressLabel = new JLabel("IP Address:");
+		JLabel ipAddressLabel = new JLabel("Adresa IP:");
 		mainPanel.add(ipAddressLabel);
 		mainPanel.add(ipAddressField);
 		
-		JLabel userNameLabel = new JLabel("User Name:");
+		JLabel userNameLabel = new JLabel("Utilizator:");
 		mainPanel.add(userNameLabel);
 		mainPanel.add(userNameField);
 		
@@ -128,7 +128,7 @@ public class LogInDialog extends JDialog {
 			}
 		});
 		buttonPanel.add(cancelButton);
-		getRootPane().setDefaultButton(cancelButton);
+		getRootPane().setDefaultButton(okButton);
 		
 		//listeners
 		addWindowListener(new WindowAdapter(){
