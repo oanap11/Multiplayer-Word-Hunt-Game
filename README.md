@@ -4,7 +4,7 @@ The program uses an authorative server approach: the game state and logic are ma
 but the server determines the response to the input and instructs all the clients how to react. Only invited players (players on the server's list) can play the game.
 
 
-Word Hunt is a timed word game for any number of players. Each players receives the same 6x6 grid of letters.
+Word Hunt is a timed word game for any number of players. Each player receives the same 6x6 grid of letters.
 The object of the game is to find as many words as you can in a given amount of time (I set it to 1 minute). Longer words are worth more points.
 The game uses a dictionary to check for valid words. I uploaded it along with the classes.
 The provided dictionary file was also used for the game Words with Friends. 
